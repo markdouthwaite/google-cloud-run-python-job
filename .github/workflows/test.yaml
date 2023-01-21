@@ -28,4 +28,4 @@ jobs:
       - name: Install dependencies
         run: make install-dev
       - name: Run tests
-        run: pytest .
+        run: make test
