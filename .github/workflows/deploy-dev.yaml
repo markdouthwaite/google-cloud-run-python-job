@@ -8,6 +8,7 @@ on:
 env:
   PROJECT_ID: '${{ secrets.DEV_GCP_PROJECT_ID }}'
   SERVICE_ACCOUNT: '${{secrets.DEV_GCP_SERVICE_ACCOUNT}}'
+  WORKLOAD_IDENTITY_PROVIDER: '${{secrets.DEV_GCP_WORKLOAD_IDENTITY_PROVIDER}}'
   JOB_NAME: 'python-job'
   REGION: '${{secrets.DEV_GCP_REGION}}'
 
@@ -25,15 +26,15 @@ jobs:
       - id: 'auth'
         uses: 'google-github-actions/auth@v1'
         with:
-          workload_identity_provider: '${{secrets.DEV_GCP_WORKLOAD_IDENTITY_PROVIDER}}'
-          service_account: '${{env.DEV_GCP_SERVICE_ACCOUNT}}'
+          workload_identity_provider: '${{env.WORKLOAD_IDENTITY_PROVIDER}}'
+          service_account: '${{env.SERVICE_ACCOUNT}}'
       - name: 'Setup GCP client'
         uses: 'google-github-actions/setup-gcloud@v0'
         with:
-          project_id: '${{ env.DEV_GCP_PROJECT_ID }}'
+          project_id: '${{ env.PROJECT_ID }}'
       - name: 'Authorize Docker push'
         run: 'gcloud auth configure-docker'
       - name: 'Build and Push Container'
         run: |-
-          docker build -t gcr.io/${{ env.DEV_GCP_PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }} .
-          docker push gcr.io/${{ env.DEV_GCP_PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }}
+          docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }} .
+          docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }}
