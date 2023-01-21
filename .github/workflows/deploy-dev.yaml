@@ -11,6 +11,7 @@ env:
   WORKLOAD_IDENTITY_PROVIDER: '${{secrets.DEV_GCP_WORKLOAD_IDENTITY_PROVIDER}}'
   JOB_NAME: 'python-job'
   REGION: '${{secrets.DEV_GCP_REGION}}'
+  TASK_TIMEOUT: '1h'
 
 jobs:
   deploy:
@@ -41,4 +42,4 @@ jobs:
       - name: 'Install beta components'
         run: gcloud components install beta
       - name: 'Deploy job'
-        run: gcloud beta run jobs create ${{env.JOB_NAME}} --region ${{env.REGION}} --image gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }}
+        run: gcloud beta run jobs create ${{env.JOB_NAME}} --region ${{env.REGION}} --task-timeout ${{env.TASK_TIMEOUT}} --image gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }}
