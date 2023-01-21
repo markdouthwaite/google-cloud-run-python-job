@@ -1,5 +1,4 @@
-def say_hello():
-    print("Hello, world!")
+from src import say_hello
 
 
 def main():
