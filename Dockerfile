@@ -10,12 +10,12 @@ WORKDIR /app
 # Copy requirements and install before copying code for faster builds
 COPY requirements requirements
 
+# install requirements
+RUN pip install -r requirements/core-requirements.txt
+
 # Set non-root user
 RUN groupadd -r service && useradd --no-log-init -r -g service service
 USER service
-
-# install requirements
-RUN pip install -r requirements/core-requirements.txt
 
 # Copy local code to the container image.
 COPY src src
