@@ -20,6 +20,8 @@ jobs:
       id-token: 'write'
     steps:
       - uses: 'actions/checkout@v3'
+      - name: 'test env'
+        run: env
       - id: 'auth'
         uses: 'google-github-actions/auth@v1'
         with:
