@@ -38,3 +38,7 @@ jobs:
         run: |-
           docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }} .
           docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }}
+      - name: 'Install beta components'
+        run: gcloud components install beta
+      - name: 'Deploy job'
+        run: gcloud beta run jobs create ${{env.JOB_NAME}} --image gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }}
