@@ -21,6 +21,4 @@ gcloud scheduler jobs create http ${SCHEDULER_JOB_NAME} \
   --oauth-service-account-email ${PROJECT_NUMBER}-compute@developer.gserviceaccount.com
 ```
 
-## Triggering via Workflows
-
-...
+## Parallel processing
