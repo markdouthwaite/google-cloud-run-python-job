@@ -1,7 +1,7 @@
 ## Setting a schedule
 
 * Enable cloud scheduler API
-* [Understand cron](crontab.guru) 
+* [Understand cron](crontab.guru)
 
 ```bash
 export PROJECT_ID=...

@@ -1,6 +1,6 @@
 # google-cloud-run-python-job
 
-This repository provides a template to quickly get a Cloud Run Job tested and deployed 
+This repository provides a template to quickly get a Cloud Run Job tested and deployed
 with a GitHub Actions powered CI/CD pipeline in minutes.
 
 ## What are Cloud Run Jobs?
@@ -10,7 +10,7 @@ and scalably. Cloud Run traditionally focused on the deployment and management o
 applications - these are Cloud Run Services.
 
 At the time of writing, Cloud Run Jobs have been released into preview. In this mode,
-Cloud Run offers an easy-to use batch processing platform. These batch processes have 
+Cloud Run offers an easy-to use batch processing platform. These batch processes have
 a range of features that allow them to be triggered as part of a Google Workflow, on
 a schedule, or manually via the `gcloud` tool or Google Cloud Console. Even better, you
 only pay for what you use! This makes Cloud Run Jobs a great way of deploying batch

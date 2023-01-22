@@ -36,7 +36,7 @@
 
 #### 3.1 Create a new Workload Identity Pool
 
-The first thing you'll need to do is create a new Workload Identity Pool to associate 
+The first thing you'll need to do is create a new Workload Identity Pool to associate
 your Workload Identity Provider with. You only need to create an Identity Pool once so
 if you end up configuring multiple GitHub Actions you can skip this step in future.
 
@@ -73,7 +73,7 @@ gcloud iam workload-identity-pools providers create-oidc "${SERVICE_NAME}" \
   --issuer-uri="https://token.actions.githubusercontent.com"
 ```
 
-You can then get access to your newly created Workload Identity Provider's name by 
+You can then get access to your newly created Workload Identity Provider's name by
 running the following command:
 
 ```bash
@@ -84,10 +84,10 @@ gcloud iam workload-identity-pools providers describe "${SERVICE_NAME}" \
   --format="value(name)"
   ```
 
-## 4 - Update IAM Roles 
+## 4 - Update IAM Roles
 
-Finally for this section, you'll need to configure your Service Account's IAM Roles to 
-include the Workload Identity Pool you created earlier. You can do this simply enough 
+Finally for this section, you'll need to configure your Service Account's IAM Roles to
+include the Workload Identity Pool you created earlier. You can do this simply enough
 using this command:
 
 ```bash
@@ -106,13 +106,13 @@ gcloud iam service-accounts add-iam-policy-binding "${SERVICE_ACCOUNT}" \
 * `WORKLOAD_IDENTITY_PROVIDER`
 * `REGION` (optional) - can be set directly in your workflow
 
-Note: if you plan on configuring CI/CD for both development and production environments, 
+Note: if you plan on configuring CI/CD for both development and production environments,
 you'll want to make sure you're de-conflicting your secrets. For example, consider using
-`DEV_SERVICE_ACCOUNT` and `PROD_SERVICE_ACCOUNT` to explicitly indicate the credentials 
-to be used in each context. You will need to generate credentials for each environment 
-you are targeting. Additionally, if you expect to use multiple tools or platforms with 
-GitHub Actions, it may be worth going further and using `GCP_PROD_SERVICE_ACCOUNT` to 
-further de-conflict your configuration. For a simple setup as described here, you need 
+`DEV_SERVICE_ACCOUNT` and `PROD_SERVICE_ACCOUNT` to explicitly indicate the credentials
+to be used in each context. You will need to generate credentials for each environment
+you are targeting. Additionally, if you expect to use multiple tools or platforms with
+GitHub Actions, it may be worth going further and using `GCP_PROD_SERVICE_ACCOUNT` to
+further de-conflict your configuration. For a simple setup as described here, you need
 not worry about this, though!
 
 ## 2 - Create Workflow
