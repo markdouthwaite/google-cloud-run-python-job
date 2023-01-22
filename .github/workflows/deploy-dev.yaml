@@ -42,7 +42,9 @@ jobs:
       - name: 'Install beta components'
         run: gcloud components install beta
       - name: 'Deploy job'
-        run: gcloud beta run jobs create ${{env.JOB_NAME}} --region ${{env.REGION}} --task-timeout ${{env.TASK_TIMEOUT}} --image gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }}
-      - name: 'Redeploy job'
-        if: ${{ failure() }}
-        run: gcloud beta run jobs update ${{env.JOB_NAME}} --region ${{env.REGION}} --task-timeout ${{env.TASK_TIMEOUT}} --image gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }}
+        run: |-
+          {
+            gcloud beta run jobs create ${{env.JOB_NAME}} --region ${{env.REGION}} --task-timeout ${{env.TASK_TIMEOUT}} --image gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }}
+          } || {
+            gcloud beta run jobs update ${{env.JOB_NAME}} --region ${{env.REGION}} --task-timeout ${{env.TASK_TIMEOUT}} --image gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }}
+          }
