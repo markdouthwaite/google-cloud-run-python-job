@@ -1,4 +1,4 @@
-.PHONY: test, install, install-dev
+.PHONY: test, install, install-dev, teardown
 
 install:
 	@pip install -r requirements/core-requirements.txt
@@ -8,3 +8,6 @@ install-dev: install
 
 test:
 	@pytest .
+
+teardown:
+	@bash scripts/teardown.sh
