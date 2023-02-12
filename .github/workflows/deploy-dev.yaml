@@ -1,47 +1,71 @@
-name: 'Deploy to dev environment'
+name: "Test & deploy Cloud Run Job to dev"
 
 on:
   push:
     branches:
-      - 'develop'
+      - "develop"
 
 env:
-  PROJECT_ID: '${{ secrets.DEV_GCP_PROJECT_ID }}'
-  SERVICE_ACCOUNT: '${{secrets.DEV_GCP_SERVICE_ACCOUNT}}'
-  WORKLOAD_IDENTITY_PROVIDER: '${{secrets.DEV_GCP_WORKLOAD_IDENTITY_PROVIDER}}'
-  JOB_NAME: 'python-job'
-  REGION: '${{secrets.DEV_GCP_REGION}}'
-  TASK_TIMEOUT: '1h'
+  PROJECT_ID: "${{ secrets.DEV_GCP_PROJECT_ID }}"
+  SERVICE_ACCOUNT: "${{secrets.DEV_GCP_SERVICE_ACCOUNT}}"
+  WORKLOAD_IDENTITY_PROVIDER: "${{secrets.DEV_GCP_WORKLOAD_IDENTITY_PROVIDER}}"
+  JOB_NAME: "python-job"
+  REGION: "${{secrets.DEV_GCP_REGION}}"
+  TASK_TIMEOUT: "1h"
 
 jobs:
+  pre-commit:
+      runs-on: "ubuntu-latest"
+      timeout-minutes: 10
+
+      steps:
+        - uses: "actions/checkout@v3"
+        - uses: "actions/setup-python@v3"
+        - uses: "pre-commit/action@v2.0.3"
+  test:
+      runs-on: "ubuntu-latest"
+      strategy:
+        max-parallel: 4
+        matrix:
+          python-version: [ "3.9", "3.10" ]
+      steps:
+        - uses: "actions/checkout@v3"
+        - name: "Set up Python ${{ matrix.python-version }}"
+          uses: "actions/setup-python@v3"
+          with:
+            python-version: "${{ matrix.python-version }}"
+        - name: "Install dependencies"
+          run: "make install-dev"
+        - name: "Run tests"
+          run: "make test"
   deploy:
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
     timeout-minutes: 10
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: "read"
+      id-token: "write"
     steps:
-      - uses: 'actions/checkout@v3'
-      - name: 'test env'
-        run: env
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v1'
+      - uses: "actions/checkout@v3"
+      - name: "test env"
+        run: "env"
+      - id: "auth"
+        uses: "google-github-actions/auth@v1"
         with:
-          workload_identity_provider: '${{env.WORKLOAD_IDENTITY_PROVIDER}}'
-          service_account: '${{env.SERVICE_ACCOUNT}}'
-      - name: 'Setup GCP client'
-        uses: 'google-github-actions/setup-gcloud@v0'
+          workload_identity_provider: "${{env.WORKLOAD_IDENTITY_PROVIDER}}"
+          service_account: "${{env.SERVICE_ACCOUNT}}"
+      - name: "Setup GCP client"
+        uses: "google-github-actions/setup-gcloud@v0"
         with:
-          project_id: '${{ env.PROJECT_ID }}'
-      - name: 'Authorize Docker push'
-        run: 'gcloud auth configure-docker'
-      - name: 'Build and Push Container'
+          project_id: "${{ env.PROJECT_ID }}"
+      - name: "Authorize Docker push"
+        run: "gcloud auth configure-docker"
+      - name: "Build and Push Container"
         run: |-
           docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }} .
           docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }}
-      - name: 'Install beta components'
-        run: gcloud components install beta
-      - name: 'Deploy job'
+      - name: "Install beta components"
+        run: "gcloud components install beta"
+      - name: "Deploy job"
         run: |-
           {
             gcloud beta run jobs create ${{env.JOB_NAME}} --region ${{env.REGION}} --task-timeout ${{env.TASK_TIMEOUT}} --image gcr.io/${{ env.PROJECT_ID }}/${{ env.JOB_NAME }}:${{  github.sha }}
