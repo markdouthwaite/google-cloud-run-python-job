@@ -1,7 +1,7 @@
 # google-cloud-run-python-job
 
 This repository provides a template to quickly get a Cloud Run Job tested and deployed
-with a GitHub Actions powered CI/CD pipeline in minutes.
+with a GitHub Actions powered CI/CD pipeline.
 
 ## What are Cloud Run Jobs?
 
