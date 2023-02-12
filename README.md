@@ -1,11 +1,11 @@
 # google-cloud-run-python-job
 
 This repository provides a template to quickly get a Cloud Run Job tested and deployed
-with a GitHub Actions powered CI/CD pipeline.
+with a GitHub Actions-powered CI/CD pipeline.
 
 ## What are Cloud Run Jobs?
 
-Cloud Run is a fully managed platform for deploying containerised applications rapidly
+Cloud Run is a fully managed platform for deploying containerized applications rapidly
 and scalably. Cloud Run traditionally focused on the deployment and management of web
 applications - these are Cloud Run Services.
 
@@ -16,7 +16,7 @@ a schedule, or manually via the `gcloud` tool or Google Cloud Console. Even bett
 only pay for what you use! This makes Cloud Run Jobs a great way of deploying batch
 processing jobs in a simple, cost-effective way!
 
-This repository provides a skeleton for getting a Google Cloud Job deployed fast!
+This repository provides a skeleton for getting a Google Cloud Job deployed, fast!
 
 ## Using this template
 
