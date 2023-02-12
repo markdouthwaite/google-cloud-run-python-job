@@ -24,7 +24,7 @@ jobs:
         - uses: "pre-commit/action@v2.0.3"
   test:
       runs-on: "ubuntu-latest"
-      needs: pre-commit
+      needs: "pre-commit"
       strategy:
         max-parallel: 4
         matrix:
@@ -42,7 +42,7 @@ jobs:
   deploy:
     runs-on: "ubuntu-latest"
     timeout-minutes: 10
-    needs: test
+    needs: "test"
     permissions:
       contents: "read"
       id-token: "write"
