@@ -1,16 +1,47 @@
 # CI/CD setup with Google Cloud Run and GitHub Actions
 
+This short guide will help you get set up with GitHub Actions-powered CI/CD pipeline 
+
 ## Pre-requisites
 
-* Enable Google Cloud Container Registry API
-* Enable Google Cloud IAM Service Account API
-* `gcloud` installed and updated
+* A Google Cloud Platform account, with a project and billing account configured.
+* The [Google Cloud Container Registry API enabled](https://cloud.google.com/container-registry/docs/enable-service)
+* The Google Cloud IAM Service Account API enabled
+* The `gcloud` [installed and updated](https://cloud.google.com/sdk/docs/install)
 
 ## How it works
 
 ### Service account keys
 
+Service accounts let you assign an identity to an application. This makes it easier to 
+set up authentication flows with Google Cloud as well as third-party applications 
+without needing to share/depend on user account (i.e. developer-controled accounts). By
+segregating accounts this way, it is possible to give an application only the access to
+resources that it absolutely needs - and these may be much narrow than developer-
+controlled user accounts. This is good security practice.
+However, for a fair while, the primary way of authenticating a third party application with your
+application was to share _service account keys_ with that application. Sharing keys with
+third-party applications can be a security risk. 
+
+For example, if a third-party application was compromised, your service account keys may 
+also be compromised: someone may be able to use those keys to access your Google Cloud 
+resources. It also makes key governance harder: it is not always easy to track which 
+keys are used by which applications, and for which purposes. This adds complexity to 
+managing identities. Fortunately, there's another way...
+
 ### Workload identity federation
+
+Workload Identity Federation is that method: it utilises 'keyless authentication'. It 
+enables applications to replace potentially long-lived keys with short-lived access 
+tokens. This method is based on configuring Google's identity management tools to trust
+valid tokens from third-party providers. When these providers are configured, tokens
+from that provider can be exchanged for a Google Cloud token that can then be used to
+'impersonate' an identity held on Google Cloud (e.g. a specific service account).
+
+This approach is beneficial because it reduces the governance challenges associated with
+managing keys directly, and it removes the risk of having your keys leaked by a 
+third-party application. While you can still use Service Account Keys to authenticate
+your applications, it is no longer the recommended approach. The rest of this 
 
 ### GitHub Actions
 
@@ -87,8 +118,9 @@ gcloud iam workload-identity-pools providers describe "${SERVICE_NAME}" \
 ## 4 - Update IAM Roles
 
 Finally for this section, you'll need to configure your Service Account's IAM Roles to
-include the Workload Identity Pool you created earlier. You can do this simply enough
-using this command:
+include the Workload Identity Pool you created earlier. This allows identities in the 
+Workload Identity Pool to impersonate your chosen Service Account. You can do this 
+simply enough using this command:
 
 ```bash
 gcloud iam service-accounts add-iam-policy-binding "${SERVICE_ACCOUNT}" \
